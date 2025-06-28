@@ -32,8 +32,8 @@ backend/
 - **Python**: Core language
 - **FastAPI**: API framework
 - **LangChain/LangGraph**: Agent framework for orchestrating workflows
-- **Playwright**: Browser automation
-- **Gemini/GPT-4**: LLM for instruction parsing and decision making
+- **Selenium + undetected-chromedriver**: Browser automation for navigating county websites
+- **Gemini**: Primary LLM for instruction parsing and decision making
 - **Neo4j**: Knowledge graph for property relationships
 - **2Captcha**: CAPTCHA solving service
 
@@ -77,6 +77,34 @@ The `_call_llm_with_fallback` method implements a robust pattern that:
 - Response caching for common queries
 - Token optimization for cost efficiency
 - Automatic retry mechanisms with appropriate backoff
+
+## Browser Automation Implementation
+
+The system uses Selenium with undetected-chromedriver to provide robust browser automation that can bypass anti-bot measures commonly found on county websites. Key features of our approach:
+
+### Core Components
+- **Selenium 4.11.2**: Industry-standard browser automation framework
+- **undetected-chromedriver 3.5.4**: Enhanced Chrome driver that evades detection
+- **Custom Browser Managers**: Specialized managers for each county website
+
+### Anti-Bot Evasion Techniques
+- **Stealth JavaScript Injection**: Custom scripts to modify browser fingerprints
+- **Randomized User-Agent Strings**: Configurable through environment variables
+- **WebDriver Property Masking**: Prevents sites from detecting automation
+- **Plugin and Language Emulation**: Mimics real browser configurations
+- **Browser Launch Customization**: Configurable Chrome options and preferences
+
+### Advanced Browser Features
+- **Screenshot Capture**: Automatic screenshots for debugging and error analysis
+- **Multi-Strategy Element Location**: Fallback selector patterns for resilience
+- **Explicit Waits**: Smart waiting for elements with appropriate timeouts
+- **Download Management**: Configured download paths with directory organization
+- **Error Recovery**: Exception handling with retry mechanisms
+
+### County-Specific Implementations
+- **CharlestonBrowserManager**: Specialized for Charleston County websites
+- **BerkeleyBrowserManager**: Specialized for Berkeley County websites
+- **Common Utilities**: Shared browser interaction patterns across counties
 
 ## Key Features
 

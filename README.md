@@ -86,10 +86,17 @@ The system implements an intelligent cascading fallback pattern where if the pri
 - **Document Viewer**: Built-in PDF preview functionality
 - **Real-time Updates**: Asynchronous communication with backend API
 
+### Browser Automation
+- **Selenium**: Core browser automation framework
+- **undetected-chromedriver**: Enhanced Chrome driver to bypass anti-bot measures
+- **Custom stealth techniques**: JavaScript injections to evade detection
+- **Screenshot capture**: Automated debugging and error diagnosis
+- **Dynamic element locators**: Multiple selector strategies for resilience
+
 ### Backend
 - **Python**: Core language for backend implementation
 - **LangChain/LangGraph**: Agent framework for orchestrating workflows
-- **Playwright**: Browser automation for navigating county websites
+- **Selenium + undetected-chromedriver**: Browser automation for navigating county websites
 - **FastAPI**: REST API for communication with frontend
 - **Neo4j**: Knowledge graph for property relationships (optional)
 
