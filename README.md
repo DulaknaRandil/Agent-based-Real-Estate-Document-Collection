@@ -23,6 +23,28 @@ The system breaks down complex human instructions into automated steps that can 
 
 This demo video shows the system successfully collecting documents from both Charleston and Berkeley County websites, navigating through multiple pages, handling forms, and organizing the results.
 
+## 🧠 LLM Integration
+
+This project leverages multiple LLMs (Large Language Models) with a robust fallback system to ensure reliable operation:
+
+### Primary Model:
+- **Google Gemini 2.0**: Used as the primary LLM with the `gemini-2.0-flash-exp` model for all core AI functions, including:
+  - Natural language query parsing
+  - Website analysis and element identification
+  - Search strategy generation
+  - Error recovery planning
+  - Deed reference extraction and optimization
+
+### Fallback Models:
+- **Groq API**: Serves as the first fallback option when Gemini is unavailable, using `deepseek-r1-distill-llama-70b`
+- **DeepSeek API**: Acts as a secondary fallback option, also using the `deepseek-r1-distill-llama-70b` model
+
+### Integration Framework:
+- **LangGraph**: Used for sophisticated AI workflow orchestration and state management
+- **LangSmith**: Provides tracing and observability for the AI workflows
+
+The system implements an intelligent cascading fallback pattern where if the primary LLM fails, it automatically tries the next available model, ensuring robust operation even if one LLM service is experiencing issues.
+
 ## 🚀 Features
 
 ### AI-Powered Automation

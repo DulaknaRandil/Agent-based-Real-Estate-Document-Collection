@@ -37,6 +37,47 @@ backend/
 - **Neo4j**: Knowledge graph for property relationships
 - **2Captcha**: CAPTCHA solving service
 
+## LLM Implementation Details
+
+The system implements a sophisticated LLM service with multi-model fallback capabilities to ensure high availability and performance:
+
+### Primary LLM: Google Gemini
+- **Model**: `gemini-2.0-flash-exp`
+- **Implementation**: Using the official Google GenerativeAI Python SDK
+- **Functions**:
+  - Property search query parsing
+  - Search strategy generation
+  - Page content analysis
+  - Error recovery planning
+  - Deed reference extraction from HTML
+
+### Fallback LLM #1: Groq
+- **Model**: `deepseek-r1-distill-llama-70b`
+- **Activation**: Automatically used if Gemini API calls fail
+- **Implementation**: Using the Groq Python client
+
+### Fallback LLM #2: DeepSeek
+- **Model**: `deepseek-r1-distill-llama-70b`
+- **Activation**: Used as last resort if both Gemini and Groq fail
+- **Implementation**: Also using the Groq client with a different API key
+
+### Intelligent Cascading Pattern
+The `_call_llm_with_fallback` method implements a robust pattern that:
+1. Attempts to use Gemini first
+2. Falls back to Groq if Gemini fails
+3. Falls back to DeepSeek if Groq fails
+4. Returns predefined fallback responses if all LLMs are unavailable
+
+### Integration with LangGraph
+- Workflows are orchestrated using LangGraph for state management
+- Each state transition can leverage LLM capabilities through the GeminiService
+- LangSmith provides tracing and observability for complex workflows
+
+### Performance Optimization
+- Response caching for common queries
+- Token optimization for cost efficiency
+- Automatic retry mechanisms with appropriate backoff
+
 ## Key Features
 
 ### AI-Powered Automation
