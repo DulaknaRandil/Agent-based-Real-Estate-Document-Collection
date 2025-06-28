@@ -1,0 +1,351 @@
+/* From Uiverse.io by chase2k25 */
+/* Fancy AI-style input field */
+.ask-ai-wrapper {
+  display: inline-block;
+  width: 100%; /* Modified to take full width */
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.ask-ai-wrapper .ai-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid #4a4a4a;
+  border-radius: 12px;
+  padding: 10px 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  overflow: hidden;
+}
+
+/* Input field */
+.ask-ai-wrapper .ai-input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: sans-serif;
+  font-size: 1rem;
+  color: #333;
+  padding: 6px 10px;
+  width: 100%;
+  position: relative; /* Ensure it stays above other elements */
+  z-index: 2; /* Bring input to the front */
+  transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ask-ai-wrapper .ai-input::placeholder {
+  color: #888;
+  font-style: italic;
+}
+
+/* SVG container */
+.ask-ai-wrapper .icon-container {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  transition: all 0.5s cubic-bezier(0.7, -0.5, 0.3, 1.5);
+  cursor: pointer;
+  z-index: 2; /* Ensure SVG is clickable */
+}
+
+/* SVG animation */
+.ask-ai-wrapper .ai-icon path {
+  fill: #4a4a4a;
+  transform-origin: center;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Subtle underline effect */
+.ask-ai-wrapper .underline-effect {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary-color);
+  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 1;
+}
+
+/* Ripple circle */
+.ask-ai-wrapper .ripple-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(253, 126, 20, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+}
+
+/* Floating dots */
+.ask-ai-wrapper .floating-dots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* Prevent dots from blocking input */
+  z-index: 1; /* Below input but above background */
+}
+
+.ask-ai-wrapper .floating-dots span {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  opacity: 0;
+  transition:
+    opacity 0.3s ease,
+    transform 0.6s cubic-bezier(0.7, -0.5, 0.3, 1.5);
+}
+
+/* Background fade */
+.ask-ai-wrapper .bg-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(253, 126, 20, 0.05),
+    rgba(255, 235, 235, 0.1)
+  );
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 0;
+}
+
+/* Hover and focus states */
+.ask-ai-wrapper .ai-input-container:hover,
+.ask-ai-wrapper .ai-input:focus-within .ai-input-container {
+  border-color: var(--primary-color);
+  box-shadow: 0 6px 20px rgba(253, 126, 20, 0.3);
+  transform: translateY(-4px);
+}
+
+.ask-ai-wrapper .ai-input-container:hover .icon-container,
+.ask-ai-wrapper .ai-input:focus-within .icon-container {
+  transform: translateY(-2px) scale(1.1);
+}
+
+.ask-ai-wrapper .ai-input-container:hover .ai-icon path,
+.ask-ai-wrapper .ai-input:focus-within .ai-icon path {
+  fill: var(--primary-color);
+  transform: scale(1.1) rotate(5deg);
+  animation: gentleBounce 0.5s infinite alternate
+    cubic-bezier(0.7, -0.5, 0.3, 1.5);
+}
+
+.ask-ai-wrapper .ai-input-container:hover .underline-effect,
+.ask-ai-wrapper .ai-input:focus-within .underline-effect {
+  width: 100%;
+}
+
+.ask-ai-wrapper .ai-input-container:hover .ripple-circle,
+.ask-ai-wrapper .ai-input:focus-within .ripple-circle {
+  width: 200px;
+  height: 200px;
+}
+
+.ask-ai-wrapper .ai-input-container:hover .floating-dots span,
+.ask-ai-wrapper .ai-input:focus-within .floating-dots span {
+  opacity: 1;
+  animation: floatUp 1.2s infinite cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.ask-ai-wrapper .ai-input-container:hover .bg-fade,
+.ask-ai-wrapper .ai-input:focus-within .bg-fade {
+  opacity: 1;
+}
+
+/* Focus state for input */
+.ask-ai-wrapper .ai-input:focus {
+  color: var(--primary-color);
+}
+
+/* Animations */
+@keyframes gentleBounce {
+  0% {
+    transform: scale(1.1) translateY(1px);
+  }
+  100% {
+    transform: scale(1.1) translateY(-1px);
+  }
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translate(var(--x), var(--y)) scale(1);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(var(--x), calc(var(--y) - 15px)) scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), calc(var(--y) - 30px)) scale(1);
+    opacity: 0;
+  }
+}
+
+/* Dot positions */
+.ask-ai-wrapper .floating-dots span:nth-child(1) {
+  --x: 10px;
+  --y: 10px;
+  animation-delay: 0s;
+}
+.ask-ai-wrapper .floating-dots span:nth-child(2) {
+  --x: -5px;
+  --y: 5px;
+  animation-delay: 0.2s;
+}
+.ask-ai-wrapper .floating-dots span:nth-child(3) {
+  --x: 15px;
+  --y: 0px;
+  animation-delay: 0.4s;
+}
+.ask-ai-wrapper .floating-dots span:nth-child(4) {
+  --x: -10px;
+  --y: 15px;
+  animation-delay: 0.6s;
+}
+
+/* Custom styles for deed documents display */
+.deed-card {
+  transition: all 0.3s ease;
+  border-left: 4px solid var(--primary-color);
+}
+
+.deed-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* PDF viewer styles */
+.pdf-viewer {
+  width: 100%;
+  height: 600px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.document-preview {
+  transition: all 0.3s;
+}
+
+.document-preview:hover {
+  transform: scale(1.02);
+}
+
+/* Table styles for book and page numbers */
+.deed-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.deed-table th {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 15px;
+}
+
+.deed-table tr {
+  transition: all 0.2s;
+}
+
+.deed-table tr:nth-child(even) {
+  background-color: rgba(253, 126, 20, 0.05);
+}
+
+.deed-table tr:hover {
+  background-color: rgba(253, 126, 20, 0.1);
+}
+
+.deed-table td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.deed-table tr:last-child td {
+  border-bottom: none;
+}
+
+.view-deed-btn {
+  padding: 5px 10px;
+  border-radius: 4px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view-deed-btn:hover {
+  background-color: #e67012;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(253, 126, 20, 0.3);
+}
+
+.badge-book {
+  background-color: #6f42c1;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.badge-page {
+  background-color: #20c997;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+/* Modal styles */
+.document-modal .modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
+
+.document-modal .modal-header {
+  background: linear-gradient(135deg, var(--primary-color), #ff9d4d);
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.document-modal .modal-body {
+  padding: 1.5rem;
+}
+
+/* Document tabs */
+.document-tabs .nav-link {
+  color: #6c757d;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.document-tabs .nav-link.active {
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+  background-color: #fff;
+}
+
+.document-tabs .nav-link:hover:not(.active) {
+  background-color: rgba(253, 126, 20, 0.05);
+  border-color: transparent;
+}

@@ -1,0 +1,43 @@
+# AI/ML Dependencies
+langchain==0.1.0
+langchain-google-genai==1.0.1
+langgraph==0.0.20
+langsmith==0.1.77
+groq==0.4.1
+
+# Browser Automation
+selenium==4.11.2
+undetected-chromedriver==3.5.4
+webdriver-manager==4.0.1
+
+# CAPTCHA Solving
+2captcha-python==1.5.1
+
+# Database
+neo4j==5.15.0
+py2neo==2021.2.4
+
+# Core Framework
+fastapi==0.104.1
+uvicorn==0.24.0
+python-dotenv==1.0.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Data Processing
+beautifulsoup4==4.12.2
+requests==2.31.0
+
+# File Handling
+PyPDF2==3.0.1
+aiofiles==23.2.1
+python-multipart==0.0.6
+
+# HTTP and Async
+httpx==0.25.2
+aiohttp==3.9.1
+
+# Utilities
+structlog==23.2.0
+rich==13.7.0
+watchdog==3.0.0

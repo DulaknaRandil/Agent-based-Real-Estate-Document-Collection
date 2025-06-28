@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Document Collection System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="custom-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdfjs-dist/3.4.120/pdf_viewer.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfjs-dist/3.4.120/pdf.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-house-fill me-2"></i>Property Document Collection
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="reports.html">Reports</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="d-flex">
+                <span class="navbar-text me-3">
+                    <span class="badge bg-light text-dark">API: <span id="apiStatus">Checking...</span></span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Property Document Search</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="searchForm">
+                            <div class="mb-3">
+                                <label for="countySelect" class="form-label">Select County</label>
+                                <div class="ask-ai-wrapper">
+                                    <div class="ai-input-container">
+                                        <span class="underline-effect"></span>
+                                        <span class="ripple-circle"></span>
+                                        <span class="bg-fade"></span>
+                                        <span class="floating-dots">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </span>
+                                        <select class="ai-input" id="countySelect" required>
+                                            <option value="" selected disabled>-- Select a county --</option>
+                                            <option value="charleston">Charleston County, SC</option>
+                                            <option value="berkeley">Berkeley County, SC</option>
+                                        </select>
+                                        <span class="icon-container">
+                                            <svg viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" class="ai-icon">
+                                                <path d="M12,22A10,10,0,1,1,22,12,10,10,0,0,1,12,22Zm0-18a8,8,0,1,0,8,8A8,8,0,0,0,12,4Zm4,9H8a1,1,0,0,1,0-2h8a1,1,0,0,1,0,2Z" fill="currentColor"></path>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="tmsNumber" class="form-label">TMS/Parcel Number</label>
+                                <div class="ask-ai-wrapper">
+                                    <div class="ai-input-container">
+                                        <span class="underline-effect"></span>
+                                        <span class="ripple-circle"></span>
+                                        <span class="bg-fade"></span>
+                                        <span class="floating-dots">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </span>
+                                        <input placeholder="Enter TMS number without dashes" class="ai-input" id="tmsNumber" type="text" required />
+                                        <span class="icon-container">
+                                            <svg viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" class="ai-icon">
+                                                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" fill="currentColor"></path>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-text mt-2">Example: For Charleston County: 5590200072, For Berkeley County: 2590502005</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="collectAll">
+                                    <label class="form-check-label" for="collectAll">
+                                        Collect all documents (Property Card, Tax Info, All Deeds)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-search me-2"></i>Search & Collect Documents
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mt-4 shadow d-none" id="resultCard">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Collection Status</h5>
+                    </div>
+                    <div class="card-body">
+                        <h5 id="propertyTitle" class="card-title">Property TMS: <span id="displayTMS"></span></h5>
+                        <p class="card-text">County: <span id="displayCounty"></span></p>
+                        <hr>
+                        <h6>Collection Status:</h6>
+                        <div id="statusUpdates">
+                            <div class="progress mb-3" style="height: 25px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" id="progressBar">0%</div>
+                            </div>
+                            <div class="alert alert-info" id="statusMessage">
+                                Initializing document collection...
+                            </div>
+                        </div>
+                        <div id="documentsSection" class="mt-3 d-none">
+                            <ul class="nav nav-tabs document-tabs mb-3" id="documentTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents-content" type="button" role="tab" aria-controls="documents-content" aria-selected="true">
+                                        <i class="bi bi-file-earmark-pdf me-1"></i>Documents
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="deeds-tab" data-bs-toggle="tab" data-bs-target="#deeds-content" type="button" role="tab" aria-controls="deeds-content" aria-selected="false">
+                                        <i class="bi bi-journal-text me-1"></i>Deed References
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview-content" type="button" role="tab" aria-controls="preview-content" aria-selected="false">
+                                        <i class="bi bi-eye me-1"></i>Document Viewer
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="errors-tab" data-bs-toggle="tab" data-bs-target="#errors-content" type="button" role="tab" aria-controls="errors-content" aria-selected="false">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>Errors
+                                    </button>
+                                </li>
+                            </ul>
+                            
+                            <div class="tab-content" id="documentTabsContent">
+                                <!-- Documents Tab -->
+                                <div class="tab-pane fade show active" id="documents-content" role="tabpanel" aria-labelledby="documents-tab">
+                                    <div class="alert alert-light border p-2 mb-3">
+                                        <small class="text-muted">Documents will appear here as they are collected. Click to view or download.</small>
+                                    </div>
+                                    <ul class="list-group" id="documentsList">
+                                        <!-- Documents will be listed here -->
+                                    </ul>
+                                </div>
+                                
+                                <!-- Deed References Tab -->
+                                <div class="tab-pane fade" id="deeds-content" role="tabpanel" aria-labelledby="deeds-tab">
+                                    <div class="alert alert-light border p-2 mb-3">
+                                        <small class="text-muted">Deed book and page references extracted from property records.</small>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table deed-table" id="deedReferencesTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Book</th>
+                                                    <th>Page</th>
+                                                    <th>Date Filed</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="deedReferencesList">
+                                                <!-- Deed references will be listed here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <!-- Document Viewer Tab -->
+                                <div class="tab-pane fade" id="preview-content" role="tabpanel" aria-labelledby="preview-tab">
+                                    <div class="alert alert-light border p-2 mb-3">
+                                        <small class="text-muted">Select a document from the Documents tab to preview it here.</small>
+                                    </div>
+                                    <div id="documentPreviewContainer">
+                                        <iframe id="pdfViewer" class="pdf-viewer d-none" title="PDF Document Viewer"></iframe>
+                                        <div id="noDocumentSelected" class="text-center p-5">
+                                            <i class="bi bi-file-earmark-x display-1 text-muted"></i>
+                                            <p class="mt-3">No document selected for preview.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Errors Tab -->
+                                <div class="tab-pane fade" id="errors-content" role="tabpanel" aria-labelledby="errors-tab">
+                                    <div class="alert alert-warning p-2 mb-3">
+                                        <small class="text-muted">
+                                            <i class="bi bi-info-circle me-2"></i>
+                                            This tab shows errors that occurred during document collection, including download error screenshots.
+                                        </small>
+                                    </div>
+                                    <div id="screenshotsContainer">
+                                        <ul class="list-group" id="screenshotsList">
+                                            <!-- Screenshots will be listed here -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="statsSection" class="mt-3 d-none">
+                            <h6>Collection Statistics:</h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card bg-light mb-2">
+                                        <div class="card-body p-2 text-center">
+                                            <h5 class="mb-0" id="statsFiles">0</h5>
+                                            <small class="text-muted">Files</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-light mb-2">
+                                        <div class="card-body p-2 text-center">
+                                            <h5 class="mb-0" id="statsTime">0s</h5>
+                                            <small class="text-muted">Time Elapsed</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-light mb-2">
+                                        <div class="card-body p-2 text-center">
+                                            <h5 class="mb-0" id="statsSteps">0/0</h5>
+                                            <small class="text-muted">Steps Completed</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="taskModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Workflow Tasks</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="tasksContainer">
+                        <!-- Tasks will be populated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Document Viewer Modal -->
+    <div class="modal fade document-modal" id="documentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="documentModalTitle">Document Viewer</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <iframe id="modalPdfViewer" class="pdf-viewer" title="PDF Document Viewer"></iframe>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0">Document Details</h6>
+                                </div>
+                                <div class="card-body">
+                                    <dl class="row">
+                                        <dt class="col-sm-4">Document Type:</dt>
+                                        <dd class="col-sm-8" id="docDetailType">-</dd>
+                                        
+                                        <dt class="col-sm-4">File Name:</dt>
+                                        <dd class="col-sm-8" id="docDetailFilename">-</dd>
+                                        
+                                        <dt class="col-sm-4">TMS Number:</dt>
+                                        <dd class="col-sm-8" id="docDetailTMS">-</dd>
+                                        
+                                        <dt class="col-sm-4">County:</dt>
+                                        <dd class="col-sm-8" id="docDetailCounty">-</dd>
+                                    </dl>
+                                    
+                                    <div id="deedDetailsSection" class="d-none">
+                                        <h6 class="mt-3">Deed Reference:</h6>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <span class="d-block">Book: <span class="badge badge-book" id="docDetailBook">-</span></span>
+                                            </div>
+                                            <div>
+                                                <span class="d-block">Page: <span class="badge badge-page" id="docDetailPage">-</span></span>
+                                            </div>
+                                            <div>
+                                                <span class="d-block">Date Filed: <span id="docDetailDate">-</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <a href="#" class="btn btn-primary w-100 mb-2" id="downloadDocumentBtn">
+                                    <i class="bi bi-cloud-download me-2"></i> Download Document
+                                </a>
+                                <button class="btn btn-outline-secondary w-100" data-bs-dismiss="modal">
+                                    <i class="bi bi-x-circle me-2"></i> Close Viewer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-5 py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">Property Document Collection System &copy; 2025</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="document-viewer.js" defer></script>
+    <script src="main.js" defer></script>
+</body>
+</html>
